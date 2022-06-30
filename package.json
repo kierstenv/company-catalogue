@@ -7,10 +7,11 @@
     "lib": "lib"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest",
+    "start": "node index.js"
   },
   "repository": {
-    "type": "git",
+    "type": "module",
     "url": "git+https://github.com/kierstenv/company-catalogue.git"
   },
   "keywords": [],
@@ -21,7 +22,6 @@
   },
   "homepage": "https://github.com/kierstenv/company-catalogue#readme",
   "dependencies": {
-    "fs": "^0.0.1-security",
-    "inquirer": "^9.0.0"
+    "inquirer": "^8.2.0"
   }
 }
