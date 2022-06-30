@@ -111,7 +111,7 @@ const init = () => {
     init();
     } else {
       const html = generateCatalogue(managers, engineers, interns);
-      fs.writeFile('./dist/company.html', html, (err) => {
+      fs.writeFile('./dist/companyCatalogue.html', html, (err) => {
         if (err) throw err;
         console.log('Team page created!');
       });
