@@ -5,8 +5,12 @@ const Engineer = require('./lib/Engineer');
 const Manager = require('./lib/Manager');
 const fs = require('fs');
 const companyTemplate = require('./src/companyTemplate');
+const generateCatalogue = require('./src/companyTemplate');
 
-employees = [];
+managers = [];
+engineers = [];
+interns = [];
+
 const questions = [
   {
     type: 'list',
@@ -54,13 +58,13 @@ const questions = [
     }
   },
   {
-    type: 'number',
+    type: 'input',
     name: 'officeNumber',
     message(answers) {
       return `What is the ${answers.role}'s office number?`;
     },
     when(answers) {
-      return answers.role === 'Manager';
+      return answers.role === 'manager';
     }
   },
   {
@@ -70,7 +74,7 @@ const questions = [
       return `What is the ${answers.role}'s GitHub username?`;
     },
     when(answers) {
-      return answers.role === 'Engineer';
+      return answers.role === 'engineer';
     }
   },
   {
@@ -80,32 +84,39 @@ const questions = [
       return `Where does the ${answers.role} attend school?`;
     },
     when(answers) {
-      return answers.role === 'Intern';
+      return answers.role === 'intern';
     }
+  },
+  {
+    type: 'confirm',
+    name: 'add',
+    message: 'Would you like to add another employee?',
+    default: true,
   }
 ];
 
 const init = () => {
   inquirer.prompt(questions).then(answers => {
-    const employee = new Employee(answers.name, answers.id, answers.email);
-    if (answers.role === 'Manager') {
-      employee.officeNumber = answers.officeNumber;
+    if (answers.role === 'manager') {
+      managers.push(new Manager(answers.name, answers.id, answers.email, answers.officeNumber));
+    } 
+    if (answers.role === 'engineer') {
+      engineers.push(new Engineer(answers.name, answers.id, answers.email, answers.github));
+    } 
+    if (answers.role === 'intern') {
+      interns.push(new Intern(answers.name, answers.id, answers.email, answers.school));
     }
-    if (answers.role === 'Engineer') {
-      employee.github = answers.github;
-    }
-    if (answers.role === 'Intern') {
-      employee.school = answers.school;
-    }
-    employees.push(employee);
+
+    if (answers.add) {
     init();
+    } else {
+      const html = generateCatalogue(managers, engineers, interns);
+      fs.writeFile('./dist/company.html', html, (err) => {
+        if (err) throw err;
+        console.log('Team page created!');
+      });
+    }
   });
 }
 
 init();
-
-
-
-// const CompanyCreator = require('./lib/CompanyCreator');
-
-// new CompanyCreator();
